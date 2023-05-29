@@ -1,5 +1,4 @@
 ﻿using GiaoVilla_VillaAPI.Data;
-using GiaoVilla_VillaAPI.Logging;
 using GiaoVilla_VillaAPI.Models.Dto;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +10,8 @@ namespace GiaoVilla_VillaAPI.Controllers
     [ApiController]
     public class VillaAPIController : ControllerBase
     {
-        private readonly ILogging _logger;
-        public VillaAPIController(ILogging logger)
+        public VillaAPIController()
         {
-            _logger = logger;
         }
 
 
@@ -23,7 +20,6 @@ namespace GiaoVilla_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<VillaDTO>> GetVillas()
         {
-            _logger.Log("Getting all villas", "");
             return Ok(VillaStore.villaList);
         }
 
@@ -39,7 +35,6 @@ namespace GiaoVilla_VillaAPI.Controllers
         {
             if (id == 0)
             {
-                _logger.Log("Get Villa Error with Id" + id, "error");
                 return BadRequest();
             }
             var villa = VillaStore.villaList.FirstOrDefault(u => u.Id == id);
