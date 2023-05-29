@@ -1,8 +1,9 @@
 ﻿using GiaoVilla_VillaAPI.Data;
-using GiaoVilla_VillaAPI.Models;
+using GiaoVilla_VillaAPI.Logging;
 using GiaoVilla_VillaAPI.Models.Dto;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace GiaoVilla_VillaAPI.Controllers
 {
@@ -10,14 +11,23 @@ namespace GiaoVilla_VillaAPI.Controllers
     [ApiController]
     public class VillaAPIController : ControllerBase
     {
+        private readonly ILogging _logger;
+        public VillaAPIController(ILogging logger)
+        {
+            _logger = logger;
+        }
+
+
+        //Get 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<VillaDTO>> GetVillas()
         {
+            _logger.Log("Getting all villas", "");
             return Ok(VillaStore.villaList);
         }
 
-
+        //Get Id
         [HttpGet("{id:int}", Name = "GetVilla")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -29,6 +39,7 @@ namespace GiaoVilla_VillaAPI.Controllers
         {
             if (id == 0)
             {
+                _logger.Log("Get Villa Error with Id" + id, "error");
                 return BadRequest();
             }
             var villa = VillaStore.villaList.FirstOrDefault(u => u.Id == id);
@@ -41,6 +52,7 @@ namespace GiaoVilla_VillaAPI.Controllers
         }
 
 
+        //Post 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -72,6 +84,7 @@ namespace GiaoVilla_VillaAPI.Controllers
         }
 
 
+        //Delete 
         [HttpDelete("{id:int}", Name = "DeleteVilla")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -93,6 +106,7 @@ namespace GiaoVilla_VillaAPI.Controllers
         }
 
 
+        //Put
         [HttpPut("{id:int}", Name = "UpdateVilla")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -112,6 +126,7 @@ namespace GiaoVilla_VillaAPI.Controllers
         }
 
 
+        //Patch
         [HttpPatch("{id:int}", Name = "UpdatePartialVilla")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
